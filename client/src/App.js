@@ -1,46 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import AppBar from "./components/AppBar.js";
+import TransactionForm from "./components/TransactionForm.js";
+import TransactionsList from "./components/TransactionsList.js";
+import Container from "@mui/material/Container";
 
 function App() {
-    const [form, setForm] = useState({
-        amount: 0,
-        description: "",
-        date: "",
-    });
+    const [transactions, setTransactions] = useState([]);
 
-    function handleInput(e) {
-        // console.log(e.target.value);
-        setForm({ ...form, [e.target.name]: e.target.value });
+    useEffect(() => {
+        fetchTransations();
+    }, []);
+
+    async function fetchTransations() {
+        const res = await fetch("http://localhost:4000/transaction");
+        const { data } = await res.json();
+        setTransactions(data);
     }
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        console.log(form);
-    }
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="number"
-                    name="amount"
-                    value={form.amount}
-                    onChange={handleInput}
-                    placeholder="Enter transaction amount"
+            <AppBar />
+            <Container>
+                <TransactionForm fetchTransations={fetchTransations} />
+
+                <TransactionsList
+                    transactions={transactions}
+                    fetchTransations={fetchTransations}
                 />
-                <input
-                    type="text"
-                    name="description"
-                    value={form.description}
-                    onChange={handleInput}
-                    placeholder="Enter transaction details"
-                />
-                <input
-                    type="date"
-                    name="date"
-                    value={form.date}
-                    onChange={handleInput}
-                />
-                <button type="submit">Submit</button>
-            </form>
+            </Container>
         </div>
     );
 }
