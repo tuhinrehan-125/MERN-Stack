@@ -6,8 +6,16 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function ButtonAppBar() {
+    const navigate = useNavigate();
+
+    function logout() {
+        Cookies.remove("token");
+        navigate("/login");
+    }
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -26,9 +34,19 @@ export default function ButtonAppBar() {
                         component="div"
                         sx={{ flexGrow: 1 }}
                     >
-                        MERN Stack
+                        <Link to="/" className="text-white">
+                            MERN Stack
+                        </Link>
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    <Button color="inherit" onClick={logout}>
+                        Logout
+                    </Button>
+                    <Link to="/login" className="text-white">
+                        <Button color="inherit">Login</Button>
+                    </Link>
+                    <Link to="/register" className="text-white">
+                        <Button color="inherit">Register</Button>
+                    </Link>
                 </Toolbar>
             </AppBar>
         </Box>
